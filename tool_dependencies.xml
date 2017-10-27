@@ -1,0 +1,6 @@
+<?xml version="1.0"?>
+<tool_dependency>
+    <package name="ucsc_tools_340_for_BLAT" version="1.0">
+        <repository name="package_ucsc_blat_340" owner="yating-l" />
+    </package>
+</tool_dependency>

@@ -1,0 +1,93 @@
+<?xml version="1.0"?>
+<tool id="ucsc_trix_index_generator" name="UCSC Trix Index Generator" version="1.0">
+    <description>Create UCSC Trix index from a tab-delimited text file or a Fasta file</description>
+    <requirements>
+        <requirement type="package" version="1.0">ucsc_tools_340_for_BLAT</requirement>
+    </requirements>
+    <command detect_errors="exit_code"><![CDATA[
+        #if $input_type.input_type_selector == "fasta":
+            python $__tool_directory__/extractHeaders.py $input_type.input_file tab_file
+            &&
+            ixIxx tab_file ${index_ix} ${index_ixx}
+        #else:
+            ixIxx $input_type.input_file ${index_ix} ${index_ixx}
+        #end if
+]]></command>
+    <inputs>
+        <conditional name="input_type">
+            <param name="input_type_selector" type="select" label="Choose the format" argument="--file_type">
+                <option value="tab">Tabular</option>
+                <option value="fasta" selected="True">Fasta</option>
+            </param>
+            <when value="tab">
+                <param name="input_file" type="data" format="tabular" label="Tabular File" argument="-f"/>
+            </when>
+            <when value="fasta">
+                <param name="input_file" type="data" format="fasta" label="Fasta File" argument="-f"/>
+            </when>
+        </conditional>
+    </inputs>
+    <outputs>
+        <collection name="trix_index" type="list" label="Trix index">
+            <data name="index_ix" format="txt" from_work_dir="output.ix"/>
+            <data name="index_ixx" format="txt" from_work_dir="output.ixx" />
+        </collection>
+    </outputs>
+    <tests>
+        <test>
+            <param name="input_type_selector" value="fasta" />
+            <param name="input_file" value="dmel-hits-translation-r6.11.fasta" />
+            <output_collection name="trix_index" type="list">
+                <element name="index_ix" file="out.ix" />
+                <element name="index_ixx" file="out.ixx" />
+            </output_collection>
+        </test>
+        <test>
+            <param name="input_type_selector" value="tab" />
+            <param name="input_file" value="dmel-hits-tab" />
+            <output_collection name="trix_index" type="list">
+                <element name="index_ix" file="out.ix" />
+                <element name="index_ixx" file="out.ixx" />
+            </output_collection>
+        </test>
+    </tests> 
+  <help>
+        <![CDATA[
+UCSC Trix Index Generator
+==========================
+
+Generate UCSC Trix index from a Fasta file or a Tabular file
+-------------------------------------------------------------
+
+ixIxx - Create indices for simple line-oriented file of format
+
+Reference: https://genome.ucsc.edu/goldenpath/help/trix.html
+
+Source code:
+============
+
+http://hgdownload.cse.ucsc.edu/admin/exe/
+
+]]></help> 
+ <citations>
+    <citation type="bibtex">
+@article{Kent01062002,
+author = {Kent, W. James and Sugnet, Charles W. and Furey, Terrence S. and Roskin, Krishna M. and Pringle, Tom H. and Zahler, Alan M. and Haussler,  and David},
+title = {The Human Genome Browser at UCSC},
+volume = {12},
+number = {6},
+pages = {996-1006},
+year = {2002},
+doi = {10.1101/gr.229102},
+URL = {http://genome.cshlp.org/content/12/6/996.abstract},
+eprint = {http://genome.cshlp.org/content/12/6/996.full.pdf+html},
+journal = {Genome Research}
+}
+    </citation>
+</citations> 
+</tool>
+             
+            
+
+               
+    
